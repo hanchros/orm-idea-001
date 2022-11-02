@@ -1,6 +1,6 @@
 import type { Model } from './Model'
 
-export type Attrribute =
+export type Attribute =
   | Attr
   | Nullable
   | Str
@@ -21,15 +21,29 @@ export type Str = Attr<string>
 export type Num = Attr<number>
 export type Bool = Attr<boolean>
 
-export interface Method<
-  Required extends string = any,
-  FnArgs extends any[] = any[],
-  FnReturn = any
-> {
-  (...args: FnArgs): FnReturn
-  required: Required
-  fn: (...args: FnArgs) => FnReturn
+// export interface Method<
+//   Required extends string = any,
+//   FnArgs extends any[] = any[],
+//   FnReturn = any
+// > {
+//   (...args: FnArgs): FnReturn
+//   required: Required
+//   fn: (...args: FnArgs) => FnReturn
+// }
+
+export type Options<Deps extends Record<string, any> = any> = {
+  // [Key in keyof Schema]: Schema[Key] extends Method ? Method<Definition<Schema>, any, any> : Schema[Key]
+  [Key in keyof Deps]: Deps[Key]
+
+
+  // [Key in keyof Schema]: Schema[Key]
 }
+
+export type Method<Deps = any, T = any> = {
+  (deps: Deps): T
+}
+
+export type MethodConstructor<ResolvedDeps> = (deps: ResolvedDeps) =>
 
 export interface Relation<T extends Model = any> {
   type: 'one' | 'many'
@@ -65,14 +79,22 @@ export function bool(): Bool {
 
 }
 
+// export function method<
+//   Required extends string | Method,
+//   FnArgs extends any[],
+//   FnReturn
+// >(
+//   required: Required[],
+//   fn: (...args: FnArgs) => FnReturn
+// ): Method<RequiredFieldsFromArray<Required[]>, FnArgs, FnReturn> {
+
+// }
+
 export function method<
-  Required extends string | Method,
-  FnArgs extends any[],
-  FnReturn
->(
-  required: Required[],
-  fn: (...args: FnArgs) => FnReturn
-): Method<RequiredFieldsFromArray<Required[]>, FnArgs, FnReturn> {
+  Deps,
+  ResolvedDeps,
+  T
+>(fn: (deps: Deps) => T): (deps: ResolvedDeps) => Method<This, Deps, T> {
 
 }
 

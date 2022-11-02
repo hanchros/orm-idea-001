@@ -2,36 +2,59 @@ import { defineModel, str, num, method, hasOne, hasMany } from '@/corm'
 import { Phone } from './Phone'
 import { Post } from './Post'
 
-export const User = defineModel(() => {
-  const id = num()
-  const email = str()
-  const firstName = str()
-  const lastName = str().nullable()
-  const profile = str()
+// export const User = defineModel(() => {
+//   const id = num()
+//   const email = str()
+//   const firstName = str()
+//   const lastName = str().nullable()
+//   const profile = str()
 
-  const phone = () => hasOne(Phone)
-  const posts = () => hasMany(Post)
+//   const phone = () => hasOne(Phone)
+//   const posts = () => hasMany(Post)
 
-  const fullName = method(['firstName', 'lastName'], () => {
-    return `${firstName} ${lastName}`
+//   const fullName = method(({ firstName, lastName }) => {
+//     return `${firstName} ${lastName}`
+//   })
+
+//   // const fullNameWithEmail = method([fullName, 'email'], () => {
+//   //   return `${fullName()}: ${email}`
+//   // })
+
+//   return {
+//     id,
+//     email,
+//     firstName,
+//     lastName,
+//     profile,
+//     phone,
+//     posts,
+//     fullName,
+//     // fullNameWithEmail
+//   }
+// })
+
+export const User = defineModel(() => ({
+  id: num(),
+  email: str(),
+  firstName: str(),
+  lastName: str().nullable(),
+  profile: str(),
+
+  // phone: () => hasOne(Phone),
+  // posts: () => hasMany(Post),
+
+  fullName: method(({ firstName }) => () => {
+
   })
 
-  const fullNameWithEmail = method([fullName, 'email'], () => {
-    return `${fullName()}: ${email}`
-  })
+  // const fullName = method(({ firstName, lastName }) => {
+  //   return `${firstName} ${lastName}`
+  // })
 
-  return {
-    id,
-    email,
-    firstName,
-    lastName,
-    profile,
-    phone,
-    posts,
-    fullName,
-    fullNameWithEmail
-  }
-})
+  // const fullNameWithEmail = method([fullName, 'email'], () => {
+  //   return `${fullName()}: ${email}`
+  // })
+}))
 
 const user = User.make({
   id: 1,
